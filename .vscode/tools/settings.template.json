@@ -68,7 +68,7 @@
     "python.defaultInterpreterPath": "_isaac_sim/python.sh",
     "python.envFile": "${workspaceFolder}/.vscode/.python.env",
     // ROS distribution
-    "ros.distro": "noetic",
+    "ros.distro": "humble",
     // Language specific settings
     "[python]": {
         "editor.tabSize": 4,

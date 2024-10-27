@@ -17,11 +17,12 @@
         // For standalone script execution
         {
             "name": "Python: Current File",
-            "type": "debugpy",
+            "type": "python",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal",
-            "envFile": "${workspaceFolder}/.vscode/.python.env",
+            "env":{
+                "PYTHONPATH": "${workspaceFolder}/env_isaacsim/bin/python:{env:PYTHONPATH}"
+            },
         },
         {
             "name": "Python: Train Environment",
@@ -40,43 +41,6 @@
             "program": "${workspaceFolder}/scripts/rsl_rl/play.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.vscode/.python.env",
-        },
-
-        // For script execution inside a Docker
-        {
-            "name": "Docker: Current File",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "envFile": "${workspaceFolder}/.vscode/.python.env",
-            "env": {
-                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}"
-            }
-        },
-        {
-            "name": "Docker: Train Environment",
-            "type": "debugpy",
-            "request": "launch",
-            "args" : ["--task", "Template-Isaac-Velocity-Flat-Anymal-D-v0", "--num_envs", "4096", "--headless"],
-            "program": "${workspaceFolder}/scripts/rsl_rl/train.py",
-            "console": "integratedTerminal",
-            "envFile": "${workspaceFolder}/.vscode/.python.env",
-            "env": {
-                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}"
-            }
-        },
-        {
-            "name": "Docker: Play Environment",
-            "type": "debugpy",
-            "request": "launch",
-            "args" : ["--task", "Template-Isaac-Velocity-Flat-Anymal-D-Play-v0", "--num_envs", "32"],
-            "program": "${workspaceFolder}/scripts/rsl_rl/play.py",
-            "console": "integratedTerminal",
-            "envFile": "${workspaceFolder}/.vscode/.python.env",
-            "env": {
-                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}"
-            }
         }
     ]
 }
