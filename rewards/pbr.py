@@ -1,5 +1,6 @@
 from tensortrade.env.default.rewards import TensorTradeRewardScheme
 from tensortrade.feed import Stream, DataFeed
+from tensortrade.oms.wallets import Portfolio
 from typing import List
 
 
@@ -45,15 +46,6 @@ class MultiAssetPBR(TensorTradeRewardScheme):
         # Compile the feed with all the rewards
         self.feed = DataFeed(rewards)
         self.feed.compile()
-
-
-        for i, price in enumerate(self.price_streams):
-            if price.value is None:
-                print(f"Warning: price value is None for stream {i}")
-
-        for i, position in enumerate(self.position_streams):
-            if position.value is None:
-                print(f"Warning: position value is None for stream {i}")
 
     def on_action(self, action: List[int]) -> None:
         """Updates the positions based on the actions.

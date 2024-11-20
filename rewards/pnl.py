@@ -33,6 +33,7 @@ class PnLRewardScheme(TensorTradeRewardScheme):
 
     def reset(self) -> None:
         self.previous_value = self._portfolio_value
+        self.feed.reset()
 
 class MutliAssetPnLRewardScheme(TensorTradeRewardScheme):
     """A reward scheme based on profit and loss for multiple assets."""
@@ -79,3 +80,4 @@ class MutliAssetPnLRewardScheme(TensorTradeRewardScheme):
     def reset(self) -> None:
         """Reset the previous portfolio value."""
         self.previous_value = self._portfolio_value
+        self.feed.reset()

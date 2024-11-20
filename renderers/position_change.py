@@ -12,10 +12,15 @@ class PositionChangeChart(Renderer):
         self.color = "orange"
 
     def render(self, env: Env, **kwargs):
-        history = DataFrame(env.observer.renderer_history)
-
-        actions = list(history.action)
-        p = list(history.price)
+        print("\n\n\n\n RENDERING \n\n\n\n")
+        print(kwargs)
+        cash_name: str = kwargs['cash_name']
+        asset_name: str = kwargs['asset_name']
+        
+        history: DataFrame = DataFrame(env.observer.renderer_history)
+        print(history)
+        actions: List[int] = list(history.action)
+        p: List[float] = list(history[f"bitfinex:/{cash_name}-{asset_name}"])
 
         buy = {}
         sell = {}
@@ -62,6 +67,11 @@ class MultiAssetPositionChangeChart(Renderer):
         prices: List[DataFrame] = [
             history.eth_price, history.btc_price, history.ada_price,
             history.sol_price, history.ltc_price, history.tron_price
+        ]
+        
+        asset_names: List[str] = [
+            "Ethereum", "Bitcoin", "Cardano",
+            "Solana", "Litecoin", "Tron"
         ]
 
         # Retrieve asset wallets and confirm the number of assets matches
@@ -110,16 +120,18 @@ class MultiAssetPositionChangeChart(Renderer):
         for asset_idx in range(n_assets):
             p = prices[asset_idx]
             ax = axs[asset_idx]
+            asset_name: str = asset_names[asset_idx]
 
             # Plot price and buy/sell signals
-            ax.plot(arange(len(p)), p, label=f"Asset {asset_idx + 1} Price", color=self.color)
+            ax.plot(arange(len(p)), p, label=f"{asset_name} Price", color=self.color)
             ax.scatter(buy_series[asset_idx].index, buy_series[asset_idx].values, marker="^", color="green", label="Buy")
             ax.scatter(sell_series[asset_idx].index, sell_series[asset_idx].values, marker="v", color="red", label="Sell")
-            ax.set_title(f"Asset {asset_idx + 1} Trading Chart")
+            ax.set_title(f"{asset_name} Trading Chart")
             ax.legend()
 
         # Plot net worth of the entire portfolio in the last subplot
         performance_df = DataFrame.from_dict(env.action_scheme.portfolio.performance, orient='index')
+        print(f'performance_df: {performance_df}')
         performance_ax = axs[-1]
         performance_df.plot(ax=performance_ax, legend=False)
         performance_ax.set_title("Portfolio Net Worth")
