@@ -53,7 +53,7 @@ for df_key, df in raw_data.items():
     
     # Cut the data to only include training data
     # Calculate the split date for the last 4 months
-    split_date = df['date'].max() - DateOffset(months=4)
+    split_date = df['date'].max() - DateOffset(months=5)
 
     # Split into training and test sets
     train_dfs[df_key] = df[df['date'] < split_date]
@@ -119,15 +119,15 @@ def create_crypto_env(config, df: DataFrame) -> TradingEnv:
 
     if len(assets) == 1:
         
-        # reward_scheme: PBR = PBR(price=price_streams[0])
-        # # reward_scheme: PnLRewardScheme = PnLRewardScheme(price=price_streams[0],
-        # #                                      cash_wallet=cash_wallet,
-        # #                                      asset_wallet=wallets[1])
-        reward_scheme: VAP = VAP(price=price_streams[0],
-                                 window_size=config["window_size"])
+        reward_scheme: PBR = PBR(price=price_streams[0])
+        # reward_scheme: PnLRewardScheme = PnLRewardScheme(price=price_streams[0],
+        #                                      cash_wallet=cash_wallet,
+        #                                      asset_wallet=wallets[1])
+        # reward_scheme: VAP = VAP(price=price_streams[0],
+        #                          window_size=config["window_size"])
 
-        # action_scheme: BSH = BSH(cash=cash_wallet, asset=wallets[1]).attach(reward_scheme)
-        action_scheme: PSAS = PSAS(cash=cash_wallet, asset=wallets[1], max_scale=0.9)
+        action_scheme: BSH = BSH(cash=cash_wallet, asset=wallets[1]).attach(reward_scheme)
+        # action_scheme: PSAS = PSAS(cash=cash_wallet, asset=wallets[1], max_scale=0.9)
 
         renderer_streams.append(Stream.sensor(action_scheme, lambda s: s.action, dtype="float").rename("action"))
         renderer_streams.append(Stream.source(list(train_dfs[str(asset)]['close']), dtype="float").rename(f"price"))
@@ -158,7 +158,7 @@ def create_crypto_env(config, df: DataFrame) -> TradingEnv:
                   window_size=config["window_size"],
                   max_allowed_loss=0.9)
 
-def create_btc_env(config):
+def create_btc_train_env(config):
     USD: Instrument = Instrument('USD', 2, 'U.S. Dollar')
     BTC: Instrument = Instrument('BTC', 8, 'Bitcoin')
 
@@ -214,18 +214,98 @@ def create_btc_env(config):
         Stream.source(list(train_dfs['TRX']['RSI_14'][-100:]), dtype="float").rename("rsi:/USD-TRX"),
     ])
     
-    # reward_scheme = PBR(price=p)
-    reward_scheme: VAP = VAP(price=p,
-                             window_size=config["window_size"])
+    reward_scheme = PBR(price=p)
+    # reward_scheme: VAP = VAP(price=p,
+    #                          window_size=config["window_size"])
 
-    # action_scheme = BSH(
-    #     cash=cash_wallet,
-    #     asset=btc_wallet
-    # ).attach(reward_scheme)
-    action_scheme: PSAS = PSAS(cash=cash_wallet, asset=btc_wallet, max_scale=0.9)
+    action_scheme = BSH(
+        cash=cash_wallet,
+        asset=btc_wallet
+    ).attach(reward_scheme)
+    # action_scheme: PSAS = PSAS(cash=cash_wallet, asset=btc_wallet, max_scale=0.9)
 
     renderer_feed = DataFeed([
         Stream.source(train_dfs['BTC']['close'], dtype="float").rename("bitfinex:/USD-BTC"),
+        Stream.sensor(action_scheme, lambda s: s.action, dtype="float").rename("action")
+    ])
+
+    return create(feed=feed,
+                  portfolio=portfolio,
+                  action_scheme=action_scheme,
+                  reward_scheme=reward_scheme,
+                  renderer_feed=renderer_feed,
+                  renderer=PositionChangeChart(),
+                  window_size=config["window_size"],
+                  max_allowed_loss=0.6)
+
+def create_btc_test_env(config):
+    USD: Instrument = Instrument('USD', 2, 'U.S. Dollar')
+    BTC: Instrument = Instrument('BTC', 8, 'Bitcoin')
+
+    p: Stream = Stream.source(list(test_dfs['BTC']['close']), dtype="float").rename("USD-BTC")
+
+    bitfinex: Exchange = Exchange("bitfinex", service=execute_order)(
+        p
+    )
+
+    cash_wallet: Wallet = Wallet(bitfinex, 10000 * USD)
+    btc_wallet: Wallet = Wallet(bitfinex, 0 * BTC)
+
+    portfolio = Portfolio(USD, [
+        cash_wallet,
+        btc_wallet
+    ])
+
+    # Creating a comprehensive DataFeed with more meaningful features
+    feed = DataFeed([
+        p,
+        
+        # For Bitcoin (BTC)
+        Stream.source(list(test_dfs['BTC']['LOGRET_16']), dtype="float").rename("log_return:/USD-BTC"),
+        Stream.source(list(test_dfs['BTC']['RSI_14']), dtype="float").rename("rsi:/USD-BTC"),
+        Stream.source(list(test_dfs['BTC']['MACD_12_26_9']), dtype="float").rename("macd:/USD-BTC"),
+        Stream.source(list(test_dfs['BTC']['ROC_10']), dtype="float").rename("roc:/USD-BTC"),
+        Stream.source(list(test_dfs['BTC']['BBL_20_2.0']), dtype="float").rename("bbl:/USD-BTC"),
+        Stream.source(list(test_dfs['BTC']['BBM_20_2.0']), dtype="float").rename("bbm:/USD-BTC"),
+        Stream.source(list(test_dfs['BTC']['BBB_20_2.0']), dtype="float").rename("bbb:/USD-BTC"),
+        Stream.source(list(test_dfs['BTC']['BBP_20_2.0']), dtype="float").rename("bbp:/USD-BTC"),
+        Stream.source(list(test_dfs['BTC']['OBV']), dtype="float").rename("obv:/USD-BTC"),
+        Stream.source(list(test_dfs['BTC']['STOCHk_14_3_3']), dtype="float").rename("stochk:/USD-BTC"),
+        Stream.source(list(test_dfs['BTC']['STOCHd_14_3_3']), dtype="float").rename("stockd:/USD-BTC"),
+
+        # For Ethereum (ETH)
+        Stream.source(list(test_dfs['ETH']['LOGRET_16']), dtype="float").rename("log_return:/USD-ETH"),
+        Stream.source(list(test_dfs['ETH']['RSI_14']), dtype="float").rename("rsi:/USD-ETH"),
+
+        # For Cardano (ADA)
+        Stream.source(list(test_dfs['ADA']['LOGRET_16']), dtype="float").rename("log_return:/USD-ADA"),
+        Stream.source(list(test_dfs['ADA']['RSI_14']), dtype="float").rename("rsi:/USD-ADA"),
+
+        # # For Solana (SOL)
+        Stream.source(list(test_dfs['SOL']['LOGRET_16'][-100:]), dtype="float").rename("log_return:/USD-SOL"),
+        Stream.source(list(test_dfs['SOL']['RSI_14'][-100:]), dtype="float").rename("rsi:/USD-SOL"),
+
+        # # For Litecoin (LTC)
+        Stream.source(list(test_dfs['LTC']['LOGRET_16'][-100:]), dtype="float").rename("log_return:/USD-LTC"),
+        Stream.source(list(test_dfs['LTC']['RSI_14'][-100:]), dtype="float").rename("rsi:/USD-LTC"),
+
+        # # For TRON (TRX)
+        Stream.source(list(test_dfs['TRX']['LOGRET_16'][-100:]), dtype="float").rename("log_return:/USD-TRX"),
+        Stream.source(list(test_dfs['TRX']['RSI_14'][-100:]), dtype="float").rename("rsi:/USD-TRX"),
+    ])
+    
+    reward_scheme = PBR(price=p)
+    # reward_scheme: VAP = VAP(price=p,
+    #                          window_size=config["window_size"])
+
+    action_scheme = BSH(
+        cash=cash_wallet,
+        asset=btc_wallet
+    ).attach(reward_scheme)
+    # action_scheme: PSAS = PSAS(cash=cash_wallet, asset=btc_wallet, max_scale=0.9)
+
+    renderer_feed = DataFeed([
+        Stream.source(test_dfs['BTC']['close'], dtype="float").rename("bitfinex:/USD-BTC"),
         Stream.sensor(action_scheme, lambda s: s.action, dtype="float").rename("action")
     ])
 
