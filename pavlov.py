@@ -13,7 +13,7 @@ from matplotlib.pyplot import plot, savefig, legend, clf
 from envs.CryptoEnv import create_crypto_train_env, create_crypto_test_env, create_btc_test_env, create_btc_train_env
 
 
-def single_security_tests(total_timesteps: int):
+def single_security_tests(total_timesteps: int, tests: int = 50):
     # Register environments
     environment_pairs: Dict[str, Tuple[str, str]] = {
         'BTC': ('CryptoTradingTrainEnv-BTC-v0', 'CryptoTradingTestEnv-BTC-v0'),
@@ -23,60 +23,65 @@ def single_security_tests(total_timesteps: int):
         'LTC': ('CryptoTradingTrainEnv-LTC-v0', 'CryptoTradingTestEnv-LTC-v0'),
         'TRX': ('CryptoTradingTrainEnv-TRX-v0', 'CryptoTradingTestEnv-TRX-v')
     }
-    
-    for asset_name, (train_env_name, test_env_name) in environment_pairs.items():
-        gym_register(train_env_name, create_crypto_train_env)
-        gym_register(test_env_name, create_crypto_test_env)
-        
-        cash_instrument: Instrument = Instrument('USD', 2)
-        asset_instrument: Instrument = Instrument(asset_name, 8)
-        env_config: dict = {
-            "window_size": 40,
-            'cash': cash_instrument,
-            'assets': [asset_instrument]
-        }
-        
-        print(f"Training model for {train_env_name}")
-        # Create environment
-        train_env = gym_make(train_env_name, config=env_config)
 
-        model: A2C = A2C("MlpPolicy", train_env, verbose=1)
-        # model: RecurrentPPO = RecurrentPPO("MlpLstmPolicy", train_env, verbose=1)
-        # model: DQN = DQN("MlpPolicy", train_env, verbose=1)
-        model.learn(total_timesteps=total_timesteps, log_interval=4)
+    best_net_worth: dict = {}
 
-        print(f"Testing model for {test_env_name}")
-        
-        train_env.close()
+    for _ in range(tests):
+        for asset_name, (train_env_name, test_env_name) in environment_pairs.items():
+            gym_register(train_env_name, create_crypto_train_env)
+            gym_register(test_env_name, create_crypto_test_env)
+            
+            cash_instrument: Instrument = Instrument('USD', 2)
+            asset_instrument: Instrument = Instrument(asset_name, 8)
+            env_config: dict = {
+                "window_size": 40,
+                'cash': cash_instrument,
+                'assets': [asset_instrument]
+            }
+            
+            print(f"Training model for {train_env_name}")
+            # Create environment
+            train_env = gym_make(train_env_name, config=env_config)
 
-        test_env = gym_make(test_env_name, config=env_config)
+            model: A2C = A2C("MlpPolicy", train_env, verbose=1)
+            # model: RecurrentPPO = RecurrentPPO("MlpLstmPolicy", train_env, verbose=1)
+            # model: DQN = DQN("MlpPolicy", train_env, verbose=1)
+            model.learn(total_timesteps=total_timesteps, log_interval=4)
 
-        obs = test_env.reset()
-        # model.set_env(train_env)
-        done = False
-        while not done:
-            action, _states = model.predict(obs, deterministic=True)
-            obs, rewards, done, info = test_env.step(action)
+            print(f"Testing model for {test_env_name}")
+            
+            train_env.close()
 
-            if done:
-                # net_worth: float = DataFrame().from_dict(test_env.action_scheme.portfolio.performance, orient='index').iloc[-1]['net_worth']
-                net_worth: DataFrame = DataFrame().from_dict(test_env.action_scheme.portfolio.performance, orient='index')['net_worth'].to_numpy()
-                # dates: DataFrame = DataFrame().from_dict(test_env.action_scheme.portfolio.performance, orient='index')['date'].to_numpy()
-                
-                print(f"Test net worth: {net_worth}")
-                
-                clf()
-                plot(net_worth, label=f"{asset_name} Net Worth")
-                legend()
-                savefig(f'{test_env_name}_net_worth.png')
-                
-                clf()
-                test_env.render(env_name=test_env_name,
-                                 asset_name=asset_name,
-                                 cash_name='USD')
-                
-                
-        test_env.close()
+            test_env = gym_make(test_env_name, config=env_config)
+
+            obs = test_env.reset()
+            # model.set_env(train_env)
+            done = False
+            while not done:
+                action, _states = model.predict(obs, deterministic=True)
+                obs, rewards, done, info = test_env.step(action)
+
+                if done:
+                    net_worth: DataFrame = DataFrame().from_dict(test_env.action_scheme.portfolio.performance, orient='index')['net_worth'].to_numpy()
+
+                    if asset_name not in best_net_worth:
+                        best_net_worth[asset_name] = net_worth[-1]
+                    elif net_worth[-1] > best_net_worth[asset_name]:
+                        print(f"New best net worth for {asset_name}: {net_worth[-1]}")
+
+                        clf()
+                        plot(net_worth, label=f"{asset_name} Net Worth")
+                        legend()
+                        savefig(f'{test_env_name}_net_worth.png')
+                        
+                        clf()
+                        test_env.render(env_name=test_env_name,
+                                        asset_name=asset_name,
+                                        cash_name='USD')
+                    else:
+                        print(f"Worse net worth for {asset_name}: {net_worth[-1]}")
+                    
+            test_env.close()
         
 
 def multi_asset_security_test(total_timesteps: int):
@@ -140,7 +145,7 @@ def btc_from_the_future():
                                       Instrument('LTC', 8),
                                       Instrument('TRX', 8)]})
 
-    model = PPO("MlpPolicy", env, verbose=1)
+    model = A2C("MlpPolicy", env, verbose=1)
     # model = DQN("MlpPolicy", env, verbose=1)
     model.learn(total_timesteps=10000 * 2.5, log_interval=4)
     
@@ -180,9 +185,9 @@ def btc_train_and_test():
 
     train_env = gym_make(train_env_name, config=env_config)
 
-    model = PPO("MlpPolicy", train_env, verbose=1)
+    model = A2C("MlpPolicy", train_env, verbose=1)
     # model = DQN("MlpPolicy", env, verbose=1)
-    model.learn(total_timesteps=2000, log_interval=4)
+    model.learn(total_timesteps=5000, log_interval=4)
 
     test_env = gym_make(test_env_name, config=env_config)
     
@@ -204,5 +209,5 @@ def btc_train_and_test():
     
 if __name__ == "__main__":
     # btc_train_and_test()
-    single_security_tests(2e3)
+    single_security_tests(3e3)
     # multi_asset_security_test(10000 * 2.5)

@@ -42,24 +42,33 @@ train_dfs: Dict[str, DataFrame] = {}
 test_dfs: Dict[str, DataFrame] = {}
 
 for df_key, df in raw_data.items():
-    df.ta.log_return(append=True, length=16)
     df.ta.rsi(append=True, length=14)
+    df.ta.cci(append=True, length=30)
+    df.ta.adx(append=True, length=30)
+    df.ta.sma(append=True, length=30)
+    df.ta.sma(append=True, length=60)
     df.ta.macd(append=True, fast=12, slow=26)
-    df.ta.roc(append=True, length=10)
     df.ta.bbands(append=True, length=20, std=2)
+    df.ta.atr(append=True)
+
+    df.ta.log_return(append=True, length=16)
+    df.ta.roc(append=True, length=10)
     df.ta.obv(append=True)
     df.ta.stoch(append=True, k=14, d=3, smooth_k=3)
+
     df.dropna(inplace=True)
     
     # Cut the data to only include training data
     # Calculate the split date for the last 4 months
-    split_date = df['date'].max() - DateOffset(months=5)
+    split_date = df['date'].max() - DateOffset(months=3)
 
     # Split into training and test sets
     train_dfs[df_key] = df[df['date'] < split_date]
     print(f"Size of training data for {df_key}: {len(train_dfs[df_key])}")
     test_dfs[df_key] = df[df['date'] >= split_date]
     print(f"Size of test data for {df_key}: {len(test_dfs[df_key])}")
+    
+    print(df.head())
 
 def create_crypto_train_env(config) -> TradingEnv:
     return create_crypto_env(config, train_dfs)
@@ -97,21 +106,42 @@ def create_crypto_env(config, df: DataFrame) -> TradingEnv:
     assets_included: list = [str(asset) for asset in assets]
     additional_asset_targets: list = [asset for asset in raw_data.keys() if asset not in assets_included]
     for asset in assets:
-        price_streams.append(Stream.source(list(df[str(asset)]['LOGRET_16']), dtype="float").rename(f"log_return:/{cash}-{asset}"))
         price_streams.append(Stream.source(list(df[str(asset)]['RSI_14']), dtype="float").rename(f"rsi:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['CCI_30_0.015']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['ADX_30']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['DMP_30']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['DMN_30']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['SMA_30']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['SMA_60']), dtype="float").rename(f"cci:/{cash}-{asset}"))
         price_streams.append(Stream.source(list(df[str(asset)]['MACD_12_26_9']), dtype="float").rename(f"macd:/{cash}-{asset}"))
+
+        price_streams.append(Stream.source(list(df[str(asset)]['LOGRET_16']), dtype="float").rename(f"log_return:/{cash}-{asset}"))
         price_streams.append(Stream.source(list(df[str(asset)]['ROC_10']), dtype="float").rename(f"roc:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['OBV']), dtype="float").rename(f"obv:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['STOCHk_14_3_3']), dtype="float").rename(f"stochk:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['STOCHd_14_3_3']), dtype="float").rename(f"stockd:/{cash}-{asset}"))
+
         price_streams.append(Stream.source(list(df[str(asset)]['BBL_20_2.0']), dtype="float").rename(f"bbl:/{cash}-{asset}"))
         price_streams.append(Stream.source(list(df[str(asset)]['BBM_20_2.0']), dtype="float").rename(f"bbm:/{cash}-{asset}"))
         price_streams.append(Stream.source(list(df[str(asset)]['BBB_20_2.0']), dtype="float").rename(f"bbb:/{cash}-{asset}"))
         price_streams.append(Stream.source(list(df[str(asset)]['BBP_20_2.0']), dtype="float").rename(f"bbp:/{cash}-{asset}"))
-        price_streams.append(Stream.source(list(df[str(asset)]['OBV']), dtype="float").rename(f"obv:/{cash}-{asset}"))
-        price_streams.append(Stream.source(list(df[str(asset)]['STOCHk_14_3_3']), dtype="float").rename(f"stochk:/{cash}-{asset}"))
-        price_streams.append(Stream.source(list(df[str(asset)]['STOCHd_14_3_3']), dtype="float").rename(f"stockd:/{cash}-{asset}"))
-    
+        price_streams.append(Stream.source(list(df[str(asset)]['ATRr_14']), dtype="float").rename(f"bbp:/{cash}-{asset}"))
+        
     for asset in additional_asset_targets:
-        price_streams.append(Stream.source(list(df[str(asset)]['LOGRET_16']), dtype="float").rename(f"log_return:/{cash}-{asset}"))
         price_streams.append(Stream.source(list(df[str(asset)]['RSI_14']), dtype="float").rename(f"rsi:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['MACD_12_26_9']), dtype="float").rename(f"macd:/{cash}-{asset}"))
+
+    # for asset in assets:
+    #     price_streams.append(Stream.source(list(df[str(asset)]['RSI_14']), dtype="float").rename(f"rsi:/{cash}-{asset}"))
+    #     price_streams.append(Stream.source(list(df[str(asset)]['MACD_12_26_9']), dtype="float").rename(f"macd:/{cash}-{asset}"))
+    #     price_streams.append(Stream.source(list(df[str(asset)]['BBL_20_2.0']), dtype="float").rename(f"bbl:/{cash}-{asset}"))
+    #     price_streams.append(Stream.source(list(df[str(asset)]['BBM_20_2.0']), dtype="float").rename(f"bbm:/{cash}-{asset}"))
+    #     price_streams.append(Stream.source(list(df[str(asset)]['BBB_20_2.0']), dtype="float").rename(f"bbb:/{cash}-{asset}"))
+    #     price_streams.append(Stream.source(list(df[str(asset)]['BBP_20_2.0']), dtype="float").rename(f"bbp:/{cash}-{asset}"))
+    
+    # for asset in additional_asset_targets:
+    #     price_streams.append(Stream.source(list(df[str(asset)]['LOGRET_16']), dtype="float").rename(f"log_return:/{cash}-{asset}"))
+    #     price_streams.append(Stream.source(list(df[str(asset)]['RSI_14']), dtype="float").rename(f"rsi:/{cash}-{asset}"))
     
     print(len(bitfinex._price_streams))
     
