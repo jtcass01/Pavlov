@@ -4,7 +4,7 @@ from tensortrade.env.default.rewards import TensorTradeRewardScheme
 from tensortrade.feed.core import Stream, DataFeed
 from tensortrade.oms.wallets import Portfolio
 
-from numpy import std
+from numpy import isnan, isfinite
 
 class VAP(TensorTradeRewardScheme):
     """A reward scheme that adjusts rewards based on portfolio value changes and market volatility.
@@ -23,23 +23,23 @@ class VAP(TensorTradeRewardScheme):
         super().__init__()
         self.window_size = window_size
         self.price = price
-        self.past_values = []  # To store portfolio values for rolling calculations
         self.position = 0
 
         # Calculate the portfolio returns
-        price_diff = price.diff().fillna(0)
-        reward = price_diff / self.get_volatility().rename("reward")
+        price_diff: Stream = price.diff().fillna(0)
+        volatility: Stream = self.get_volatility(price)
+        safe_volatility = volatility.apply(
+            lambda v: max(v, 1e-5)
+        )
+        reward = (price_diff / safe_volatility).rename("reward")
+        reward.apply(lambda r: r if not isnan(r) and isfinite(r) else 0)  # Replace NaN/inf with 0
+
         self.feed = DataFeed([reward])
         self.feed.compile()
 
-    def get_volatility(self) -> Stream:
+    def get_volatility(self, price: 'Stream') -> 'Stream':
         """Calculate rolling standard deviation (volatility) manually."""
-        def rolling_std(values: List[float], window_size: int) -> float:
-            if len(values) < window_size:
-                return 0.0
-            return std(values[-window_size:])
-
-        return Stream.sensor(self.price, lambda p: rolling_std(p.values, self.window_size), dtype="float").rename("volatility")
+        return price.rolling(self.window_size).std() 
 
     def get_reward(self, portfolio: 'Portfolio') -> float:
         """Return the reward."""
@@ -51,5 +51,4 @@ class VAP(TensorTradeRewardScheme):
 
     def reset(self) -> None:
         """Reset the reward scheme."""
-        self.past_values.clear()
         self.feed.reset()

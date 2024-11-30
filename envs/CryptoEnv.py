@@ -11,13 +11,16 @@ from pandas import DataFrame, read_csv, DateOffset
 import pandas_ta as ta
 from numpy import array
 from tensortrade.env.default import create, TradingEnv
-from tensortrade.env.default.actions import BSH
-from tensortrade.env.default.rewards import PBR
+from tensortrade.env.default.actions import BSH, ManagedRiskOrders
+from tensortrade.env.default.rewards import PBR, RiskAdjustedReturns
+from tensortrade.env.default.renderers import PlotlyTradingChart
 from tensortrade.feed.core import DataFeed, Stream, DataFeed
 from tensortrade.oms.wallets import Portfolio, Wallet
 from tensortrade.oms.exchanges import Exchange
 from tensortrade.oms.services.execution.simulated import execute_order
 from tensortrade.oms.instruments import Instrument
+from tensortrade.oms.orders import TradeType
+
 # Local imports
 from renderers.position_change import PositionChangeChart, MultiAssetPositionChangeChart
 from rewards.pnl import PnLRewardScheme, MutliAssetPnLRewardScheme
@@ -28,6 +31,7 @@ from actions.psas import PSAS
 
 
 DATA_DIRECTORY: str = "/home/durzo/Pavlov/data/bitfinex"
+TEST_MONTHS: int = 5
 
 raw_data: Dict[str, DataFrame] = {
     'BTC': read_csv(join(DATA_DIRECTORY, 'bitfinex_btc.csv'), parse_dates=['date']),
@@ -35,7 +39,7 @@ raw_data: Dict[str, DataFrame] = {
     'ADA': read_csv(join(DATA_DIRECTORY, 'bitfinex_ada.csv'), parse_dates=['date']),
     'SOL': read_csv(join(DATA_DIRECTORY, 'bitfinex_sol.csv'), parse_dates=['date']),
     'LTC': read_csv(join(DATA_DIRECTORY, 'bitfinex_ltc.csv'), parse_dates=['date']),
-    'TRX': read_csv(join(DATA_DIRECTORY, 'bitfinex_tron.csv'), parse_dates=['date'])
+    'TRX': read_csv(join(DATA_DIRECTORY, 'bitfinex_trx.csv'), parse_dates=['date'])
 }
 
 train_dfs: Dict[str, DataFrame] = {}
@@ -59,16 +63,14 @@ for df_key, df in raw_data.items():
     df.dropna(inplace=True)
     
     # Cut the data to only include training data
-    # Calculate the split date for the last 4 months
-    split_date = df['date'].max() - DateOffset(months=3)
+    # Calculate the split date for the last 5 months
+    split_date = df['date'].max() - DateOffset(months=5)
 
     # Split into training and test sets
     train_dfs[df_key] = df[df['date'] < split_date]
-    print(f"Size of training data for {df_key}: {len(train_dfs[df_key])}")
     test_dfs[df_key] = df[df['date'] >= split_date]
-    print(f"Size of test data for {df_key}: {len(test_dfs[df_key])}")
     
-    print(df.head())
+    print(f"{df_key} | Train: {len(train_dfs[df_key])}, Test: {len(test_dfs[df_key])}")
 
 def create_crypto_train_env(config) -> TradingEnv:
     return create_crypto_env(config, train_dfs)
@@ -131,17 +133,6 @@ def create_crypto_env(config, df: DataFrame) -> TradingEnv:
         price_streams.append(Stream.source(list(df[str(asset)]['RSI_14']), dtype="float").rename(f"rsi:/{cash}-{asset}"))
         price_streams.append(Stream.source(list(df[str(asset)]['MACD_12_26_9']), dtype="float").rename(f"macd:/{cash}-{asset}"))
 
-    # for asset in assets:
-    #     price_streams.append(Stream.source(list(df[str(asset)]['RSI_14']), dtype="float").rename(f"rsi:/{cash}-{asset}"))
-    #     price_streams.append(Stream.source(list(df[str(asset)]['MACD_12_26_9']), dtype="float").rename(f"macd:/{cash}-{asset}"))
-    #     price_streams.append(Stream.source(list(df[str(asset)]['BBL_20_2.0']), dtype="float").rename(f"bbl:/{cash}-{asset}"))
-    #     price_streams.append(Stream.source(list(df[str(asset)]['BBM_20_2.0']), dtype="float").rename(f"bbm:/{cash}-{asset}"))
-    #     price_streams.append(Stream.source(list(df[str(asset)]['BBB_20_2.0']), dtype="float").rename(f"bbb:/{cash}-{asset}"))
-    #     price_streams.append(Stream.source(list(df[str(asset)]['BBP_20_2.0']), dtype="float").rename(f"bbp:/{cash}-{asset}"))
-    
-    # for asset in additional_asset_targets:
-    #     price_streams.append(Stream.source(list(df[str(asset)]['LOGRET_16']), dtype="float").rename(f"log_return:/{cash}-{asset}"))
-    #     price_streams.append(Stream.source(list(df[str(asset)]['RSI_14']), dtype="float").rename(f"rsi:/{cash}-{asset}"))
     
     print(len(bitfinex._price_streams))
     
@@ -150,14 +141,8 @@ def create_crypto_env(config, df: DataFrame) -> TradingEnv:
     if len(assets) == 1:
         
         reward_scheme: PBR = PBR(price=price_streams[0])
-        # reward_scheme: PnLRewardScheme = PnLRewardScheme(price=price_streams[0],
-        #                                      cash_wallet=cash_wallet,
-        #                                      asset_wallet=wallets[1])
-        # reward_scheme: VAP = VAP(price=price_streams[0],
-        #                          window_size=config["window_size"])
 
         action_scheme: BSH = BSH(cash=cash_wallet, asset=wallets[1]).attach(reward_scheme)
-        # action_scheme: PSAS = PSAS(cash=cash_wallet, asset=wallets[1], max_scale=0.9)
 
         renderer_streams.append(Stream.sensor(action_scheme, lambda s: s.action, dtype="float").rename("action"))
         renderer_streams.append(Stream.source(list(train_dfs[str(asset)]['close']), dtype="float").rename(f"price"))
@@ -186,7 +171,92 @@ def create_crypto_env(config, df: DataFrame) -> TradingEnv:
                   renderer_feed=renderer_feed,
                   renderer=MultiAssetPositionChangeChart(),
                   window_size=config["window_size"],
-                  max_allowed_loss=0.9)
+                  max_allowed_loss=0.6)
+
+def create_crypto_risk_train_env(config) -> TradingEnv:
+    return create_crypto_risk_env(config, train_dfs)
+
+
+def create_crypto_risk_test_env(config) -> TradingEnv:
+    return create_crypto_risk_env(config, test_dfs)
+
+
+def create_crypto_risk_env(config, df: DataFrame) -> TradingEnv:
+    assert 'window_size' in config, "Window size is required for Crypto environment"
+    assert 'assets' in config, "Assets, in the form of instruments, are required for Crypto environment"
+    assert 'cash' in config, "Cash, in the form of an instrument, is required for Crypto environment"
+    
+    cash: Instrument = config['cash']
+    assets: List[Instrument] = config['assets']
+
+    price_streams: List[Stream] = []
+    renderer_streams: List[Stream] = []
+    for asset in assets:
+        price_stream: Stream = Stream.source(list(df[str(asset)]['close']), dtype="float").rename(f"{cash}-{asset}")
+        price_streams.append(price_stream)
+        renderer_streams.append(price_stream)
+
+    bitfinex: Exchange = Exchange("bitfinex", service=execute_order)(
+        *price_streams
+    )
+
+    cash_wallet: Wallet = Wallet(bitfinex, 1e4 * cash)
+    wallets: List[Wallet] = [cash_wallet]
+    for asset in assets:
+        wallets.append(Wallet(bitfinex, 0 * asset))
+
+    portfolio = Portfolio(cash, wallets)
+
+    # Creating a comprehensive DataFeed with more meaningful features
+    assets_included: list = [str(asset) for asset in assets]
+    additional_asset_targets: list = [asset for asset in raw_data.keys() if asset not in assets_included]
+    for asset in assets:
+        price_streams.append(Stream.source(list(df[str(asset)]['RSI_14']), dtype="float").rename(f"rsi:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['CCI_30_0.015']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['ADX_30']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['DMP_30']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['DMN_30']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['SMA_30']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['SMA_60']), dtype="float").rename(f"cci:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['MACD_12_26_9']), dtype="float").rename(f"macd:/{cash}-{asset}"))
+
+        price_streams.append(Stream.source(list(df[str(asset)]['LOGRET_16']), dtype="float").rename(f"log_return:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['ROC_10']), dtype="float").rename(f"roc:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['OBV']), dtype="float").rename(f"obv:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['STOCHk_14_3_3']), dtype="float").rename(f"stochk:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['STOCHd_14_3_3']), dtype="float").rename(f"stockd:/{cash}-{asset}"))
+
+        price_streams.append(Stream.source(list(df[str(asset)]['BBL_20_2.0']), dtype="float").rename(f"bbl:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['BBM_20_2.0']), dtype="float").rename(f"bbm:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['BBB_20_2.0']), dtype="float").rename(f"bbb:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['BBP_20_2.0']), dtype="float").rename(f"bbp:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['ATRr_14']), dtype="float").rename(f"bbp:/{cash}-{asset}"))
+
+        renderer_streams.append(Stream.source(list(df[str(asset)]['close']), dtype="float").rename(f"price"))
+        
+    for asset in additional_asset_targets:
+        price_streams.append(Stream.source(list(df[str(asset)]['RSI_14']), dtype="float").rename(f"rsi:/{cash}-{asset}"))
+        price_streams.append(Stream.source(list(df[str(asset)]['MACD_12_26_9']), dtype="float").rename(f"macd:/{cash}-{asset}"))
+
+    
+    print(len(bitfinex._price_streams))
+    
+    feed = DataFeed(price_streams)
+
+    # Rename the price stream to "price" for the renderer
+    renderer_feed = DataFeed(renderer_streams)
+
+    return create(feed=feed,
+                  portfolio=portfolio,
+                  action_scheme=ManagedRiskOrders(stop=[0.02, 0.05, 0.1],
+                                                  take=[0.01, 0.05, 0.1, 0.15],
+                                                  trade_type=TradeType.LIMIT,
+                                                  trade_sizes=16),
+                  reward_scheme=RiskAdjustedReturns(return_algorithm='sortino'),
+                  renderer_feed=renderer_feed,
+                  window_size=config["window_size"],
+                  max_allowed_loss=0.2)
+
 
 def create_btc_train_env(config):
     USD: Instrument = Instrument('USD', 2, 'U.S. Dollar')

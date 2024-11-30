@@ -35,5 +35,5 @@ if __name__ == "__main__":
 
     print(f"Downloading TRON data...")
     bitfinex_tron: DataFrame = cdd.fetch("Bitfinex", "USD", "TRX", "1h")
-    bitfinex_tron.to_csv('bitfinex_tron.csv')
+    bitfinex_tron.to_csv('bitfinex_trx.csv')
     print(f"Downloaded and saved TRON data.")

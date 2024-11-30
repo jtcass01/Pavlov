@@ -1,19 +1,26 @@
 # Built-in imports
-from typing import Dict, Tuple
+from typing import Dict, Tuple, List
+from random import choice
+from os.path import join, exists, dirname
 
 # Third-party imports
 from pandas import DataFrame
-from stable_baselines3 import A2C, PPO, DQN
-from stable_baselines3.common.env_util import make_vec_env
-from sb3_contrib import RecurrentPPO, QRDQN
+from stable_baselines3 import A2C, PPO
 from gym import make as gym_make, register as gym_register
 from tensortrade.oms.instruments import Instrument
-from matplotlib.pyplot import plot, savefig, legend, clf
 
-from envs.CryptoEnv import create_crypto_train_env, create_crypto_test_env, create_btc_test_env, create_btc_train_env
+from envs.CryptoEnv import (create_crypto_train_env, 
+                            create_crypto_test_env, 
+                            create_btc_test_env, 
+                            create_btc_train_env, 
+                            create_crypto_risk_train_env, 
+                            create_crypto_risk_test_env)
+from util.model_logging import ModelLogging
+
+MODELS_DIRECTORY: str = join(dirname(__file__), 'models')
 
 
-def single_security_tests(total_timesteps: int, tests: int = 50):
+def single_security_tests(tests: int = 50):
     # Register environments
     environment_pairs: Dict[str, Tuple[str, str]] = {
         'BTC': ('CryptoTradingTrainEnv-BTC-v0', 'CryptoTradingTestEnv-BTC-v0'),
@@ -21,68 +28,131 @@ def single_security_tests(total_timesteps: int, tests: int = 50):
         'ADA': ('CryptoTradingTrainEnv-ADA-v0', 'CryptoTradingTestEnv-ADA-v0'),
         'SOL': ('CryptoTradingTrainEnv-SOL-v0', 'CryptoTradingTestEnv-SOL-v0'),
         'LTC': ('CryptoTradingTrainEnv-LTC-v0', 'CryptoTradingTestEnv-LTC-v0'),
-        'TRX': ('CryptoTradingTrainEnv-TRX-v0', 'CryptoTradingTestEnv-TRX-v')
+        'TRX': ('CryptoTradingTrainEnv-TRX-v0', 'CryptoTradingTestEnv-TRX-v0')
     }
+    
+    # Setup model logging
+    model_logging: ModelLogging = ModelLogging('single_security_tests', list(environment_pairs.keys()), MODELS_DIRECTORY)
 
-    best_net_worth: dict = {}
+    window_sizes: List[int] = [96, 72, 48, 24, 12]
+    timesteps: List[int] = [500, 1000, 5000, 10000, 15000]
 
     for _ in range(tests):
+        print(f"Test {_}:")
         for asset_name, (train_env_name, test_env_name) in environment_pairs.items():
+            timestep: int = choice(timesteps)
+            window_size: int = choice(window_sizes)
+
             gym_register(train_env_name, create_crypto_train_env)
             gym_register(test_env_name, create_crypto_test_env)
             
             cash_instrument: Instrument = Instrument('USD', 2)
             asset_instrument: Instrument = Instrument(asset_name, 8)
             env_config: dict = {
-                "window_size": 40,
+                "window_size": window_size,
                 'cash': cash_instrument,
                 'assets': [asset_instrument]
             }
             
-            print(f"Training model for {train_env_name}")
+            print(f"[{_}]\tTraining model for {train_env_name} with window size {window_size} and timesteps {timestep}")
             # Create environment
             train_env = gym_make(train_env_name, config=env_config)
 
-            model: A2C = A2C("MlpPolicy", train_env, verbose=1)
-            # model: RecurrentPPO = RecurrentPPO("MlpLstmPolicy", train_env, verbose=1)
-            # model: DQN = DQN("MlpPolicy", train_env, verbose=1)
-            model.learn(total_timesteps=total_timesteps, log_interval=4)
+            model: PPO = PPO("MlpPolicy", train_env, device='cpu')
+            model.learn(total_timesteps=timestep, progress_bar=True)
 
-            print(f"Testing model for {test_env_name}")
+            print(f"\tTesting model for {test_env_name}")
             
             train_env.close()
 
             test_env = gym_make(test_env_name, config=env_config)
 
+            model.set_env(test_env)
             obs = test_env.reset()
-            # model.set_env(train_env)
             done = False
             while not done:
                 action, _states = model.predict(obs, deterministic=True)
                 obs, rewards, done, info = test_env.step(action)
 
                 if done:
-                    net_worth: DataFrame = DataFrame().from_dict(test_env.action_scheme.portfolio.performance, orient='index')['net_worth'].to_numpy()
+                    new_best = model_logging.log_model(
+                        asset_name, model, test_env.action_scheme.portfolio.performance,
+                        config={
+                            'window_size': window_size,
+                            'timesteps': timestep
+                        })
 
-                    if asset_name not in best_net_worth:
-                        best_net_worth[asset_name] = net_worth[-1]
-                    elif net_worth[-1] > best_net_worth[asset_name]:
-                        print(f"New best net worth for {asset_name}: {net_worth[-1]}")
-
-                        clf()
-                        plot(net_worth, label=f"{asset_name} Net Worth")
-                        legend()
-                        savefig(f'{test_env_name}_net_worth.png')
-                        
-                        clf()
+                    if new_best:
                         test_env.render(env_name=test_env_name,
                                         asset_name=asset_name,
                                         cash_name='USD')
-                    else:
-                        print(f"Worse net worth for {asset_name}: {net_worth[-1]}")
                     
             test_env.close()
-        
+
+
+def single_security_risk_tests(tests: int = 3):
+    # Register environments
+    environment_pairs: Dict[str, Tuple[str, str]] = {
+        'BTC': ('CryptoTradingRiskTrainEnv-BTC-v0', 'CryptoTradingRiskTestEnv-BTC-v0'),
+        'ETH': ('CryptoTradingRiskTrainEnv-ETH-v0', 'CryptoTradingRiskTestEnv-ETH-v0'),
+        'ADA': ('CryptoTradingRiskTrainEnv-ADA-v0', 'CryptoTradingRiskTestEnv-ADA-v0'),
+        'SOL': ('CryptoTradingRiskTrainEnv-SOL-v0', 'CryptoTradingRiskTestEnv-SOL-v0'),
+        'LTC': ('CryptoTradingRiskTrainEnv-LTC-v0', 'CryptoTradingRiskTestEnv-LTC-v0'),
+        'TRX': ('CryptoTradingRiskTrainEnv-TRX-v0', 'CryptoTradingRiskTestEnv-TRX-v0')
+    }
+
+    model_logging: ModelLogging = ModelLogging('single_security_risk_tests', list(environment_pairs.keys()), MODELS_DIRECTORY)
+    
+    window_sizes: List[int] = [96, 72, 48, 24, 12]
+    timesteps: List[int] = [500, 1000, 5000, 10000, 15000]
+
+    for _ in range(tests):
+        print(f"Test {_}:")
+        for asset_name, (train_env_name, test_env_name) in environment_pairs.items():
+            timestep: int = choice(timesteps)
+            window_size: int = choice(window_sizes)
+            
+            gym_register(train_env_name, create_crypto_risk_train_env)
+            gym_register(test_env_name, create_crypto_risk_test_env)
+            
+            cash_instrument: Instrument = Instrument('USD', 2)
+            asset_instrument: Instrument = Instrument(asset_name, 8)
+            env_config: dict = {
+                "window_size": window_size,
+                'cash': cash_instrument,
+                'assets': [asset_instrument]
+            }
+            
+            print(f"[{_}]\tTraining model for {train_env_name} with window size {window_size} and timesteps {timestep}")
+
+            # Create environment
+            train_env = gym_make(train_env_name, config=env_config)
+
+            model: PPO = PPO("MlpPolicy", train_env, device='cpu')
+            model.learn(total_timesteps=timestep, progress_bar=True)
+
+            print(f"[{_}]\tTesting model for {test_env_name}")
+            
+            train_env.close()
+
+            test_env = gym_make(test_env_name, config=env_config)
+
+            obs = test_env.reset()
+            model.set_env(test_env)
+            done = False
+            _states = None
+            while not done:
+                action, _states = model.predict(obs, state=_states, deterministic=True)
+                obs, rewards, done, info = test_env.step(action)
+
+                if done:
+                    model_logging.log_model(asset_name, model, test_env.action_scheme.portfolio.performance,
+                                            config={
+                                                'window_size': window_size,
+                                                'timesteps': timestep
+                                            })
+                    
+            test_env.close()
 
 def multi_asset_security_test(total_timesteps: int):
     train_env_name = 'MultiCryptoTradingTrainEnv-v0'
@@ -192,6 +262,7 @@ def btc_train_and_test():
     test_env = gym_make(test_env_name, config=env_config)
     
     obs = test_env.reset()
+    model.set_env(test_env)
     done = False
     while not done:
         action, _states = model.predict(obs, deterministic=True)
@@ -209,5 +280,6 @@ def btc_train_and_test():
     
 if __name__ == "__main__":
     # btc_train_and_test()
-    single_security_tests(3e3)
+    # single_security_risk_tests(tests=int(1e4))
+    single_security_tests(tests=int(1e4))
     # multi_asset_security_test(10000 * 2.5)
