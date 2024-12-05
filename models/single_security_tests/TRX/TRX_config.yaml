@@ -1,2 +1,2 @@
-timesteps: 5000
-window_size: 48
+timesteps: 10000
+window_size: 72

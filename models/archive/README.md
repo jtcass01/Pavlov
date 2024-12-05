@@ -1,0 +1,1 @@
+When I generated this data, the models were compared by the final net worth. Instead now, I am comparing the models by the integral of the net worth shifted down by the starting value.

@@ -1,0 +1,118 @@
+\begin{thebibliography}{18}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{\discretionary{}{}{}https://doi.org/#1}\else
+  \providecommand{\doi}[1]{\discretionary{}{}{}\urlstyle{rm}\url{https://doi.org/#1}}\fi
+
+\bibitem[{Wilder(1978)}]{wilder1978new}
+Wilder, J., \emph{New Concepts in Technical Trading Systems}, Trend Research,
+  1978.
+\newblock \urlprefix\url{https://books.google.com/books?id=WesJAQAAMAAJ}.
+
+\bibitem[{Lambert(1983)}]{lambert1983commodity}
+Lambert, D.~R., \enquote{Commodity channel index: Tool for trading cyclic
+  trends,} \emph{Technical Analysis of Stocks \& Commodities}, Vol.~1, 1983,
+  p.~47.
+
+\bibitem[{Appel(2005)}]{appel2005technical}
+Appel, G., \emph{Technical analysis: power tools for active investors}, FT
+  Press, 2005.
+
+\bibitem[{Bollinger(2002)}]{bollinger2002bollinger}
+Bollinger, J., \emph{Bollinger on Bollinger bands}, McGraw-Hill New York, 2002.
+
+\bibitem[{Granville(1963)}]{granville1963new}
+Granville, J., \emph{New Key to Stock Market Profits}, Martino Publishing,
+  1963.
+
+\bibitem[{Mohammadshafie et~al.(2024)Mohammadshafie, Mirzaeinia, Jumakhan, and
+  Mirzaeinia}]{RLinFinance}
+Mohammadshafie, A., Mirzaeinia, A., Jumakhan, H., and Mirzaeinia, A.,
+  \enquote{Deep Reinforcement Learning Strategies in Finance: Insights into
+  Asset Holding, Trading Behavior, and Purchase Diversity,} , June 2024.
+\newblock \doi{10.48550/arXiv.2407.09557}.
+
+\bibitem[{Mnih et~al.(2016)Mnih, Badia, Mirza, Graves, Lillicrap, Harley,
+  Silver, and Kavukcuoglu}]{mnih2016asynchronousmethodsdeepreinforcement}
+Mnih, V., Badia, A.~P., Mirza, M., Graves, A., Lillicrap, T.~P., Harley, T.,
+  Silver, D., and Kavukcuoglu, K., \enquote{Asynchronous Methods for Deep
+  Reinforcement Learning,} , 2016.
+\newblock \urlprefix\url{https://arxiv.org/abs/1602.01783}.
+
+\bibitem[{Schulman et~al.(2017{\natexlab{a}})Schulman, Levine, Moritz, Jordan,
+  and Abbeel}]{schulman2017trustregionpolicyoptimization}
+Schulman, J., Levine, S., Moritz, P., Jordan, M.~I., and Abbeel, P.,
+  \enquote{Trust Region Policy Optimization,} , 2017{\natexlab{a}}.
+\newblock \urlprefix\url{https://arxiv.org/abs/1502.05477}.
+
+\bibitem[{Schulman et~al.(2017{\natexlab{b}})Schulman, Wolski, Dhariwal,
+  Radford, and Klimov}]{schulman2017proximalpolicyoptimizationalgorithms}
+Schulman, J., Wolski, F., Dhariwal, P., Radford, A., and Klimov, O.,
+  \enquote{Proximal Policy Optimization Algorithms,} , 2017{\natexlab{b}}.
+\newblock \urlprefix\url{https://arxiv.org/abs/1707.06347}.
+
+\bibitem[{Haarnoja et~al.(2019)Haarnoja, Zhou, Hartikainen, Tucker, Ha, Tan,
+  Kumar, Zhu, Gupta, Abbeel, and
+  Levine}]{haarnoja2019softactorcriticalgorithmsapplications}
+Haarnoja, T., Zhou, A., Hartikainen, K., Tucker, G., Ha, S., Tan, J., Kumar,
+  V., Zhu, H., Gupta, A., Abbeel, P., and Levine, S., \enquote{Soft
+  Actor-Critic Algorithms and Applications,} , 2019.
+\newblock \urlprefix\url{https://arxiv.org/abs/1812.05905}.
+
+\bibitem[{Fujimoto et~al.(2018)Fujimoto, van Hoof, and
+  Meger}]{fujimoto2018addressingfunctionapproximationerror}
+Fujimoto, S., van Hoof, H., and Meger, D., \enquote{Addressing Function
+  Approximation Error in Actor-Critic Methods,} , 2018.
+\newblock \urlprefix\url{https://arxiv.org/abs/1802.09477}.
+
+\bibitem[{Lillicrap et~al.(2019)Lillicrap, Hunt, Pritzel, Heess, Erez, Tassa,
+  Silver, and Wierstra}]{lillicrap2019continuouscontroldeepreinforcement}
+Lillicrap, T.~P., Hunt, J.~J., Pritzel, A., Heess, N., Erez, T., Tassa, Y.,
+  Silver, D., and Wierstra, D., \enquote{Continuous control with deep
+  reinforcement learning,} , 2019.
+\newblock \urlprefix\url{https://arxiv.org/abs/1509.02971}.
+
+\bibitem[{Sortino and Price(1994)}]{sortino1994performance}
+Sortino, F.~A., and Price, L.~N., \enquote{Performance measurement in a
+  downside risk framework,} \emph{the Journal of Investing}, Vol.~3, No.~3,
+  1994, pp. 59--64.
+
+\bibitem[{Harris et~al.(2020)Harris, Millman, van~der Walt, Gommers, Virtanen,
+  Cournapeau, Wieser, Taylor, Berg, Smith, Kern, Picus, Hoyer, van Kerkwijk,
+  Brett, Haldane, del R{\'{i}}o, Wiebe, Peterson, G{\'{e}}rard-Marchant,
+  Sheppard, Reddy, Weckesser, Abbasi, Gohlke, and Oliphant}]{harris2020array}
+Harris, C.~R., Millman, K.~J., van~der Walt, S.~J., Gommers, R., Virtanen, P.,
+  Cournapeau, D., Wieser, E., Taylor, J., Berg, S., Smith, N.~J., Kern, R.,
+  Picus, M., Hoyer, S., van Kerkwijk, M.~H., Brett, M., Haldane, A., del
+  R{\'{i}}o, J.~F., Wiebe, M., Peterson, P., G{\'{e}}rard-Marchant, P.,
+  Sheppard, K., Reddy, T., Weckesser, W., Abbasi, H., Gohlke, C., and Oliphant,
+  T.~E., \enquote{Array programming with {NumPy},} \emph{Nature}, Vol. 585, No.
+  7825, 2020, pp. 357--362.
+\newblock \doi{10.1038/s41586-020-2649-2},
+  \urlprefix\url{https://doi.org/10.1038/s41586-020-2649-2}.
+
+\bibitem[{pandas~development team(2020)}]{reback2020pandas}
+pandas~development team, T., \enquote{pandas-dev/pandas: Pandas,} , Feb. 2020.
+\newblock \doi{10.5281/zenodo.3509134},
+  \urlprefix\url{https://doi.org/10.5281/zenodo.3509134}.
+
+\bibitem[{pan(2024)}]{pandas-ta}
+\enquote{pandas-ta,} , 2024.
+\newblock \urlprefix\url{https://github.com/twopirllc/pandas-ta}.
+
+\bibitem[{Ten(2024)}]{Tensortrade}
+\enquote{TensorTrade,} , 2024.
+\newblock \urlprefix\url{https://www.tensortrade.org/en/latest/index.html}.
+
+\bibitem[{Raffin et~al.(2021)Raffin, Hill, Gleave, Kanervisto, Ernestus, and
+  Dormann}]{stable-baselines3}
+Raffin, A., Hill, A., Gleave, A., Kanervisto, A., Ernestus, M., and Dormann,
+  N., \enquote{Stable-Baselines3: Reliable Reinforcement Learning
+  Implementations,} \emph{Journal of Machine Learning Research}, Vol.~22, No.
+  268, 2021, pp. 1--8.
+\newblock \urlprefix\url{http://jmlr.org/papers/v22/20-1364.html}.
+
+\end{thebibliography}

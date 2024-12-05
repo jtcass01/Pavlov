@@ -54,7 +54,6 @@ for df_key, df in raw_data.items():
     df.ta.macd(append=True, fast=12, slow=26)
     df.ta.bbands(append=True, length=20, std=2)
     df.ta.atr(append=True)
-
     df.ta.log_return(append=True, length=16)
     df.ta.roc(append=True, length=10)
     df.ta.obv(append=True)

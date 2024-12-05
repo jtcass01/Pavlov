@@ -5,6 +5,7 @@ from os.path import join, exists
 from yaml import dump, load, FullLoader
 
 # Third-party imports
+from numpy import array
 from pandas import DataFrame
 from stable_baselines3.common.base_class import BaseAlgorithm
 from matplotlib.pyplot import plot, savefig, legend, clf, title
@@ -36,7 +37,7 @@ class ModelLogging:
                 print(f'Starting with best net worths: {self._best_net_worth}')
         else:
             for asset_name in asset_names:
-                self._best_net_worth[asset_name] = 0.0
+                self._best_net_worth[asset_name] = -float('inf')
                 
             self.log_best_net_worth()
             
@@ -52,14 +53,17 @@ class ModelLogging:
         return is_new_best
             
     def evaluate_model(self, asset_name: str, performance: dict) -> bool:
-        net_worth: DataFrame = DataFrame().from_dict(performance, orient='index')['net_worth'].to_numpy()
-        final_net_worth: float = net_worth[-1]
-        return final_net_worth > self._best_net_worth[asset_name]
+        net_worth: array = DataFrame().from_dict(performance, orient='index')['net_worth'].to_numpy()
+        shifted_net_worth: array = net_worth - net_worth[0]
+        net_sum: float = float(sum(shifted_net_worth))
+        return net_sum > self._best_net_worth[asset_name]
 
     def save_model(self, asset_name: str, model: BaseAlgorithm, performance: dict, config: dict) -> None:
         # Update the best net worth for the asset
         net_worth: DataFrame = DataFrame().from_dict(performance, orient='index')['net_worth'].to_numpy()
-        self._best_net_worth[asset_name] = float(net_worth[-1])
+        shifted_net_worth: array = net_worth - net_worth[0]
+        net_sum: float = float(sum(shifted_net_worth))
+        self._best_net_worth[asset_name] = net_sum
         print(f"New best net worth for {asset_name}: {self._best_net_worth[asset_name]}")
         
         # Create a plot of the net worth
