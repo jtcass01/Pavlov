@@ -1,4 +1,4 @@
-\begin{thebibliography}{18}
+\begin{thebibliography}{29}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -6,6 +6,28 @@
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{\discretionary{}{}{}https://doi.org/#1}\else
   \providecommand{\doi}[1]{\discretionary{}{}{}\urlstyle{rm}\url{https://doi.org/#1}}\fi
+
+\bibitem[{Hu et~al.(2015)Hu, Liu, Zhang, Su, Ngai, and Liu}]{HU2015534}
+Hu, Y., Liu, K., Zhang, X., Su, L., Ngai, E., and Liu, M., \enquote{Application
+  of evolutionary computation for rule discovery in stock algorithmic trading:
+  A literature review,} \emph{Applied Soft Computing}, Vol.~36, 2015, pp.
+  534--551.
+\newblock \doi{https://doi.org/10.1016/j.asoc.2015.07.008},
+  \urlprefix\url{https://www.sciencedirect.com/science/article/pii/S156849461500438X}.
+
+\bibitem[{{Internal Revenue Service}(2023)}]{wash_sale}
+{Internal Revenue Service}, \enquote{Publication 550 (2023), Investment Income
+  and Expenses,} , 2023.
+\newblock \urlprefix\url{https://www.irs.gov/publications/p550}.
+
+\bibitem[{{Internal Revenue Service}(2024)}]{crypto_irs}
+{Internal Revenue Service}, \enquote{Digital assets,} , 2024.
+\newblock
+  \urlprefix\url{https://www.irs.gov/businesses/small-businesses-self-employed/digital-assets}.
+
+\bibitem[{Murphy(1999)}]{murphy1999technical}
+Murphy, J.~J., \emph{Technical analysis of the financial markets: A
+  comprehensive guide to trading methods and applications}, Penguin, 1999.
 
 \bibitem[{Wilder(1978)}]{wilder1978new}
 Wilder, J., \emph{New Concepts in Technical Trading Systems}, Trend Research,
@@ -35,25 +57,6 @@ Mohammadshafie, A., Mirzaeinia, A., Jumakhan, H., and Mirzaeinia, A.,
   Asset Holding, Trading Behavior, and Purchase Diversity,} , June 2024.
 \newblock \doi{10.48550/arXiv.2407.09557}.
 
-\bibitem[{Mnih et~al.(2016)Mnih, Badia, Mirza, Graves, Lillicrap, Harley,
-  Silver, and Kavukcuoglu}]{mnih2016asynchronousmethodsdeepreinforcement}
-Mnih, V., Badia, A.~P., Mirza, M., Graves, A., Lillicrap, T.~P., Harley, T.,
-  Silver, D., and Kavukcuoglu, K., \enquote{Asynchronous Methods for Deep
-  Reinforcement Learning,} , 2016.
-\newblock \urlprefix\url{https://arxiv.org/abs/1602.01783}.
-
-\bibitem[{Schulman et~al.(2017{\natexlab{a}})Schulman, Levine, Moritz, Jordan,
-  and Abbeel}]{schulman2017trustregionpolicyoptimization}
-Schulman, J., Levine, S., Moritz, P., Jordan, M.~I., and Abbeel, P.,
-  \enquote{Trust Region Policy Optimization,} , 2017{\natexlab{a}}.
-\newblock \urlprefix\url{https://arxiv.org/abs/1502.05477}.
-
-\bibitem[{Schulman et~al.(2017{\natexlab{b}})Schulman, Wolski, Dhariwal,
-  Radford, and Klimov}]{schulman2017proximalpolicyoptimizationalgorithms}
-Schulman, J., Wolski, F., Dhariwal, P., Radford, A., and Klimov, O.,
-  \enquote{Proximal Policy Optimization Algorithms,} , 2017{\natexlab{b}}.
-\newblock \urlprefix\url{https://arxiv.org/abs/1707.06347}.
-
 \bibitem[{Haarnoja et~al.(2019)Haarnoja, Zhou, Hartikainen, Tucker, Ha, Tan,
   Kumar, Zhu, Gupta, Abbeel, and
   Levine}]{haarnoja2019softactorcriticalgorithmsapplications}
@@ -62,11 +65,12 @@ Haarnoja, T., Zhou, A., Hartikainen, K., Tucker, G., Ha, S., Tan, J., Kumar,
   Actor-Critic Algorithms and Applications,} , 2019.
 \newblock \urlprefix\url{https://arxiv.org/abs/1812.05905}.
 
-\bibitem[{Fujimoto et~al.(2018)Fujimoto, van Hoof, and
-  Meger}]{fujimoto2018addressingfunctionapproximationerror}
-Fujimoto, S., van Hoof, H., and Meger, D., \enquote{Addressing Function
-  Approximation Error in Actor-Critic Methods,} , 2018.
-\newblock \urlprefix\url{https://arxiv.org/abs/1802.09477}.
+\bibitem[{Mnih et~al.(2016)Mnih, Badia, Mirza, Graves, Lillicrap, Harley,
+  Silver, and Kavukcuoglu}]{mnih2016asynchronousmethodsdeepreinforcement}
+Mnih, V., Badia, A.~P., Mirza, M., Graves, A., Lillicrap, T.~P., Harley, T.,
+  Silver, D., and Kavukcuoglu, K., \enquote{Asynchronous Methods for Deep
+  Reinforcement Learning,} , 2016.
+\newblock \urlprefix\url{https://arxiv.org/abs/1602.01783}.
 
 \bibitem[{Lillicrap et~al.(2019)Lillicrap, Hunt, Pritzel, Heess, Erez, Tassa,
   Silver, and Wierstra}]{lillicrap2019continuouscontroldeepreinforcement}
@@ -74,6 +78,18 @@ Lillicrap, T.~P., Hunt, J.~J., Pritzel, A., Heess, N., Erez, T., Tassa, Y.,
   Silver, D., and Wierstra, D., \enquote{Continuous control with deep
   reinforcement learning,} , 2019.
 \newblock \urlprefix\url{https://arxiv.org/abs/1509.02971}.
+
+\bibitem[{Fujimoto et~al.(2018)Fujimoto, van Hoof, and
+  Meger}]{fujimoto2018addressingfunctionapproximationerror}
+Fujimoto, S., van Hoof, H., and Meger, D., \enquote{Addressing Function
+  Approximation Error in Actor-Critic Methods,} , 2018.
+\newblock \urlprefix\url{https://arxiv.org/abs/1802.09477}.
+
+\bibitem[{Schulman et~al.(2017)Schulman, Wolski, Dhariwal, Radford, and
+  Klimov}]{schulman2017proximalpolicyoptimizationalgorithms}
+Schulman, J., Wolski, F., Dhariwal, P., Radford, A., and Klimov, O.,
+  \enquote{Proximal Policy Optimization Algorithms,} , 2017.
+\newblock \urlprefix\url{https://arxiv.org/abs/1707.06347}.
 
 \bibitem[{Sortino and Price(1994)}]{sortino1994performance}
 Sortino, F.~A., and Price, L.~N., \enquote{Performance measurement in a
@@ -94,8 +110,9 @@ Harris, C.~R., Millman, K.~J., van~der Walt, S.~J., Gommers, R., Virtanen, P.,
 \newblock \doi{10.1038/s41586-020-2649-2},
   \urlprefix\url{https://doi.org/10.1038/s41586-020-2649-2}.
 
-\bibitem[{pandas~development team(2020)}]{reback2020pandas}
-pandas~development team, T., \enquote{pandas-dev/pandas: Pandas,} , Feb. 2020.
+\bibitem[{{The pandas development team}(2020)}]{reback2020pandas}
+{The pandas development team}, \enquote{pandas-dev/pandas: Pandas,} , Feb.
+  2020.
 \newblock \doi{10.5281/zenodo.3509134},
   \urlprefix\url{https://doi.org/10.5281/zenodo.3509134}.
 
@@ -114,5 +131,40 @@ Raffin, A., Hill, A., Gleave, A., Kanervisto, A., Ernestus, M., and Dormann,
   Implementations,} \emph{Journal of Machine Learning Research}, Vol.~22, No.
   268, 2021, pp. 1--8.
 \newblock \urlprefix\url{http://jmlr.org/papers/v22/20-1364.html}.
+
+\bibitem[{Nakamoto(2008)}]{nakamoto2008bitcoin}
+Nakamoto, S., \enquote{Bitcoin: A peer-to-peer electronic cash system,}
+  \emph{Satoshi Nakamoto}, 2008.
+
+\bibitem[{Buterin(2013)}]{buterin2013ethereum}
+Buterin, V., \enquote{Ethereum Whitepaper,} , 2013.
+\newblock \urlprefix\url{https://ethereum.org/en/whitepaper/}, accessed:
+  December 2024.
+
+\bibitem[{{Cardano Foundation}(2024)}]{cardano2024}
+{Cardano Foundation}, \enquote{Cardano: Peer-reviewed Blockchain Platform,} ,
+  2024.
+\newblock \urlprefix\url{https://cardano.org}, accessed: December 2024.
+
+\bibitem[{{Solana Labs}(2017)}]{yakovenko2017solana}
+{Solana Labs}, \enquote{Solana,} , 2017.
+\newblock \urlprefix\url{https://solana.com}, accessed: December 2024.
+
+\bibitem[{Lee(2011)}]{lee2011litecoin}
+Lee, C., \enquote{Litecoin: Open Source Peer-to-Peer Digital Currency,} , 2011.
+\newblock \urlprefix\url{https://litecoin.org}, accessed: December 2024.
+
+\bibitem[{Sun(2017)}]{sun2017tron}
+Sun, J., \enquote{TRON Decentralized Network,} , 2017.
+\newblock \urlprefix\url{https://tron.network}, accessed: December 2024.
+
+\bibitem[{Hotelling(1933)}]{hotelling1933analysis}
+Hotelling, H., \enquote{Analysis of a complex of statistical variables into
+  principal components.} \emph{Journal of educational psychology}, Vol.~24,
+  No.~6, 1933, p. 417.
+
+\bibitem[{Nguyen(2021)}]{nguyen2021mip}
+Nguyen, L., \enquote{MIP-1 MinSwap-Multi-pool decentralized exchange on
+  Cardano,} 2021.
 
 \end{thebibliography}

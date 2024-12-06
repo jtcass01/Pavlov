@@ -6,45 +6,46 @@ Database file #1: pavlovBib.bib
 Warning--entry type for "reback2020pandas" isn't style-file defined
 --line 144 of file pavlovBib.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 18 entries,
+Warning--empty journal in nguyen2021mip
+You've used 29 entries,
             3319 wiz_defined-function locations,
-            779 strings with 9201 characters,
-and the built_in function-call counts, 9530 in all, are:
-= -- 564
-> -- 532
-< -- 18
-+ -- 205
-- -- 169
-* -- 828
-:= -- 1463
-add.period$ -- 45
-call.type$ -- 18
-change.case$ -- 72
-chr.to.int$ -- 19
-cite$ -- 22
-duplicate$ -- 781
-empty$ -- 701
-format.name$ -- 206
-if$ -- 1818
-int.to.chr$ -- 2
-int.to.str$ -- 19
-missing$ -- 172
-newline$ -- 77
-num.names$ -- 48
-pop$ -- 332
+            838 strings with 10520 characters,
+and the built_in function-call counts, 13869 in all, are:
+= -- 901
+> -- 613
+< -- 34
++ -- 250
+- -- 193
+* -- 1111
+:= -- 2135
+add.period$ -- 73
+call.type$ -- 29
+change.case$ -- 121
+chr.to.int$ -- 30
+cite$ -- 34
+duplicate$ -- 1183
+empty$ -- 1081
+format.name$ -- 241
+if$ -- 2677
+int.to.chr$ -- 1
+int.to.str$ -- 30
+missing$ -- 242
+newline$ -- 117
+num.names$ -- 81
+pop$ -- 489
 preamble$ -- 1
-purify$ -- 72
+purify$ -- 116
 quote$ -- 0
-skip$ -- 244
+skip$ -- 401
 stack$ -- 0
-substring$ -- 294
-swap$ -- 450
-text.length$ -- 11
+substring$ -- 478
+swap$ -- 629
+text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 100
-warning$ -- 0
-while$ -- 42
+type$ -- 164
+warning$ -- 1
+while$ -- 68
 width$ -- 0
-write$ -- 205
-(There was 1 warning)
+write$ -- 329
+(There were 2 warnings)

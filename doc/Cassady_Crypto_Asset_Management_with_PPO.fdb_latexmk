@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex Cassady_Crypto_Asset_Management_with_PPO"] 1733371587 "Cassady_Crypto_Asset_Management_with_PPO.aux" "Cassady_Crypto_Asset_Management_with_PPO.bbl" "Cassady_Crypto_Asset_Management_with_PPO" 1733371906
+["bibtex Cassady_Crypto_Asset_Management_with_PPO"] 1733512489 "Cassady_Crypto_Asset_Management_with_PPO.aux" "Cassady_Crypto_Asset_Management_with_PPO.bbl" "Cassady_Crypto_Asset_Management_with_PPO" 1733516894
   "./new-aiaa.bst" 1709576330 34589 483567d3ff9a05af907ca8efcd852b42 ""
-  "Cassady_Crypto_Asset_Management_with_PPO.aux" 1733371906 12702 fc704cd4aa77beb531caa6e33c2ebf3f "pdflatex"
-  "pavlovBib.bib" 1733363819 6109 1fe21940e85584cd25db934b1a8ec6aa ""
+  "Cassady_Crypto_Asset_Management_with_PPO.aux" 1733516894 15969 7c0495bfe45d883d9f2b2ce663add57c "pdflatex"
+  "pavlovBib.bib" 1733509925 10888 d6bf5f5f87bb1df2346d96e824722b4e ""
   (generated)
   "Cassady_Crypto_Asset_Management_with_PPO.bbl"
   "Cassady_Crypto_Asset_Management_with_PPO.blg"
-["pdflatex"] 1733371904 "/home/durzo/Pavlov/doc/Cassady_Crypto_Asset_Management_with_PPO.tex" "Cassady_Crypto_Asset_Management_with_PPO.pdf" "Cassady_Crypto_Asset_Management_with_PPO" 1733371906
+["pdflatex"] 1733516891 "/home/durzo/Pavlov/doc/Cassady_Crypto_Asset_Management_with_PPO.tex" "Cassady_Crypto_Asset_Management_with_PPO.pdf" "Cassady_Crypto_Asset_Management_with_PPO" 1733516894
   "/etc/texmf/web2c/texmf.cnf" 1693050044 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/durzo/Pavlov/doc/Cassady_Crypto_Asset_Management_with_PPO.tex" 1733371903 13937 987953d7debc822932bc5ad8056dab60 ""
+  "/home/durzo/Pavlov/doc/Cassady_Crypto_Asset_Management_with_PPO.tex" 1733516890 30680 3d90acc833f28d1c21ed5791b9811207 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc" 1640468671 2914 8283dfc24eaf1964346f843d7605c2b0 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc" 1422827479 2083 60e36f8eac802fcaf19eabe2633b406e ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -38,7 +38,6 @@
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txmiaSTbb.tfm" 1569879884 920 99acdf374993fd46fd345f9cac168080 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txmiaX.tfm" 1634244313 1716 a6b113dfe808a82f532d14b1f370053f ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/newtx/txsys.tfm" 1569879884 1580 8da1d0227b68d95a2f0ea5709b29fc83 ""
-  "/usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/t1xtt.tfm" 1136768653 1384 8943063000d26272532f74ca134dfecd ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/txsya.tfm" 1136768653 972 2c9ffac4bbd20f91c01aaef9bf3f8710 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/txfonts/txsyb.tfm" 1136768653 988 098ca7e8cc5647b9ac21b82dbdce1f01 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/newtx/NewTXMI.pfb" 1572128992 32409 1452fa0ce4fabfb48acd5d077e296f6d ""
@@ -50,7 +49,6 @@
   "/usr/share/texlive/texmf-dist/fonts/type1/public/newtx/ztmb.pfb" 1640468671 239149 b459cdf3364a26072e94167b64f425b2 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/newtx/ztmr.pfb" 1640468671 269694 aaa4ec66041f739d25146321feddb50c ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/newtx/ztmri.pfb" 1640468671 230451 72745fed20f6a7d3da4ddd8a9b788e85 ""
-  "/usr/share/texlive/texmf-dist/fonts/type1/public/txfonts/t1xtt.pfb" 1136849748 26301 f08b3c26ea42c3177a262c2ac37d6a91 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/txfonts/txsya.pfb" 1136849748 18865 ebb26de41fddbc82c044d680eec38cec ""
   "/usr/share/texlive/texmf-dist/fonts/vf/public/newtx/ntx-Regular-tlf-ot1.vf" 1583272976 956 44be8e0aea9c6d145fc21c9948a6b4b5 ""
   "/usr/share/texlive/texmf-dist/fonts/vf/public/newtx/ntxexx.vf" 1471383769 1648 0d93cbefa82585faadc39ecd0ea4f212 ""
@@ -160,7 +158,6 @@
   "/usr/share/texlive/texmf-dist/tex/latex/newtx/omlntxmi.fd" 1476653768 1919 e9d8f2f584e8bea3fa98fd6a074cab36 ""
   "/usr/share/texlive/texmf-dist/tex/latex/newtx/ot1ntxtlf.fd" 1641850547 2241 e9e29b034b8eb01c46f61e2fc5a445b2 ""
   "/usr/share/texlive/texmf-dist/tex/latex/newtx/t1ntxtlf.fd" 1641850547 2211 2794559346df5bbb0dbf1a757c3cc21f ""
-  "/usr/share/texlive/texmf-dist/tex/latex/newtx/t1ntxtt.fd" 1336691118 1500 76616326ae68ec568910194063e7101c ""
   "/usr/share/texlive/texmf-dist/tex/latex/newtx/ts1ntxtlf.fd" 1423006468 1219 06811c362a6c86c10e17f80577d8ceee ""
   "/usr/share/texlive/texmf-dist/tex/latex/newtx/untxexa.fd" 1376004569 558 91031960917530f42e0f8fc4d1db1550 ""
   "/usr/share/texlive/texmf-dist/tex/latex/newtx/untxmia.fd" 1596661975 3832 57dfbcfb6f19c9f63a28ca1bfda0abe2 ""
@@ -192,10 +189,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1693050084 4379155 98693266ff65f58d9f98aff394de12d2 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1711412982 2800748 f4d6ee8bafc531d1cbe062950743f226 ""
-  "Cassady_Crypto_Asset_Management_with_PPO.aux" 1733371906 12702 fc704cd4aa77beb531caa6e33c2ebf3f "pdflatex"
-  "Cassady_Crypto_Asset_Management_with_PPO.bbl" 1733371587 5848 5fc892c7c4b97366914e50709943b49e "bibtex Cassady_Crypto_Asset_Management_with_PPO"
-  "Cassady_Crypto_Asset_Management_with_PPO.out" 1733371906 3767 a29a763b0dc80eb14db1b5275687efeb "pdflatex"
-  "Cassady_Crypto_Asset_Management_with_PPO.tex" 1733371903 13937 987953d7debc822932bc5ad8056dab60 ""
+  "Cassady_Crypto_Asset_Management_with_PPO.aux" 1733516894 15969 7c0495bfe45d883d9f2b2ce663add57c "pdflatex"
+  "Cassady_Crypto_Asset_Management_with_PPO.bbl" 1733512489 8038 581baa34953300daf7c407dce4438757 "bibtex Cassady_Crypto_Asset_Management_with_PPO"
+  "Cassady_Crypto_Asset_Management_with_PPO.out" 1733516894 3787 624b89036475448fef0e569071ce0991 "pdflatex"
+  "Cassady_Crypto_Asset_Management_with_PPO.tex" 1733516890 30680 3d90acc833f28d1c21ed5791b9811207 ""
   "figures/Accumulated_Rewards_Reference.png" 1733265284 59759 7a7d014d5e9ada752a81784491021060 ""
   "figures/BSH_Action_Example.png" 1733265297 36247 e7019d8ca22315e104f12953eaa5f690 ""
   "figures/Risk_action_example.png" 1733265313 83286 4f09030d458eef68ae853d19dfc75b8a ""
