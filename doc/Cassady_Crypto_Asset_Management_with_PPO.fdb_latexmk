@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex Cassady_Crypto_Asset_Management_with_PPO"] 1733512489 "Cassady_Crypto_Asset_Management_with_PPO.aux" "Cassady_Crypto_Asset_Management_with_PPO.bbl" "Cassady_Crypto_Asset_Management_with_PPO" 1733516894
+["bibtex Cassady_Crypto_Asset_Management_with_PPO"] 1733512489 "Cassady_Crypto_Asset_Management_with_PPO.aux" "Cassady_Crypto_Asset_Management_with_PPO.bbl" "Cassady_Crypto_Asset_Management_with_PPO" 1733527470
   "./new-aiaa.bst" 1709576330 34589 483567d3ff9a05af907ca8efcd852b42 ""
-  "Cassady_Crypto_Asset_Management_with_PPO.aux" 1733516894 15969 7c0495bfe45d883d9f2b2ce663add57c "pdflatex"
+  "Cassady_Crypto_Asset_Management_with_PPO.aux" 1733527470 15969 7c0495bfe45d883d9f2b2ce663add57c "pdflatex"
   "pavlovBib.bib" 1733509925 10888 d6bf5f5f87bb1df2346d96e824722b4e ""
   (generated)
   "Cassady_Crypto_Asset_Management_with_PPO.bbl"
   "Cassady_Crypto_Asset_Management_with_PPO.blg"
-["pdflatex"] 1733516891 "/home/durzo/Pavlov/doc/Cassady_Crypto_Asset_Management_with_PPO.tex" "Cassady_Crypto_Asset_Management_with_PPO.pdf" "Cassady_Crypto_Asset_Management_with_PPO" 1733516894
+["pdflatex"] 1733527467 "/home/durzo/Pavlov/doc/Cassady_Crypto_Asset_Management_with_PPO.tex" "Cassady_Crypto_Asset_Management_with_PPO.pdf" "Cassady_Crypto_Asset_Management_with_PPO" 1733527470
   "/etc/texmf/web2c/texmf.cnf" 1693050044 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/durzo/Pavlov/doc/Cassady_Crypto_Asset_Management_with_PPO.tex" 1733516890 30680 3d90acc833f28d1c21ed5791b9811207 ""
+  "/home/durzo/Pavlov/doc/Cassady_Crypto_Asset_Management_with_PPO.tex" 1733527466 30680 fe433e082c7a8351323288cf34d369b8 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc" 1640468671 2914 8283dfc24eaf1964346f843d7605c2b0 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc" 1422827479 2083 60e36f8eac802fcaf19eabe2633b406e ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -189,10 +189,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1693050084 4379155 98693266ff65f58d9f98aff394de12d2 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1711412982 2800748 f4d6ee8bafc531d1cbe062950743f226 ""
-  "Cassady_Crypto_Asset_Management_with_PPO.aux" 1733516894 15969 7c0495bfe45d883d9f2b2ce663add57c "pdflatex"
+  "Cassady_Crypto_Asset_Management_with_PPO.aux" 1733527470 15969 7c0495bfe45d883d9f2b2ce663add57c "pdflatex"
   "Cassady_Crypto_Asset_Management_with_PPO.bbl" 1733512489 8038 581baa34953300daf7c407dce4438757 "bibtex Cassady_Crypto_Asset_Management_with_PPO"
-  "Cassady_Crypto_Asset_Management_with_PPO.out" 1733516894 3787 624b89036475448fef0e569071ce0991 "pdflatex"
-  "Cassady_Crypto_Asset_Management_with_PPO.tex" 1733516890 30680 3d90acc833f28d1c21ed5791b9811207 ""
+  "Cassady_Crypto_Asset_Management_with_PPO.out" 1733527470 3787 624b89036475448fef0e569071ce0991 "pdflatex"
+  "Cassady_Crypto_Asset_Management_with_PPO.tex" 1733527466 30680 fe433e082c7a8351323288cf34d369b8 ""
   "figures/Accumulated_Rewards_Reference.png" 1733265284 59759 7a7d014d5e9ada752a81784491021060 ""
   "figures/BSH_Action_Example.png" 1733265297 36247 e7019d8ca22315e104f12953eaa5f690 ""
   "figures/Risk_action_example.png" 1733265313 83286 4f09030d458eef68ae853d19dfc75b8a ""
